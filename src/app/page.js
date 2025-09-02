@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import { BasicForm } from "../Form";
+import { BasicForm, ContactForm, FinalForm, DoneForm } from "../Form";
+import { motion } from "motion/react";
 
 export default function Page() {
   const [form, setForm] = useState({
@@ -16,14 +17,26 @@ export default function Page() {
   });
   const [formPage, setFormPage] = useState("BasicForm");
 
-  function continueForm() {
-    console.log(form);
-  }
   return (
-    <div>
+    <div
+      animate={{ rotate: 360 }}
+      className="flex justify-center items-center bg-gray-200 w-screen h-screen "
+    >
       {formPage === "BasicForm" && (
         <BasicForm setFormPage={setFormPage} setForm={setForm} form={form} />
       )}
+      {formPage === "ContactForm" && (
+        <ContactForm setFormPage={setFormPage} setForm={setForm} form={form} />
+      )}
+      {formPage === "FinalForm" && (
+        <FinalForm
+          formPage={formPage}
+          setFormPage={setFormPage}
+          setForm={setForm}
+          form={form}
+        />
+      )}
+      {formPage === "DoneForm" && <DoneForm />}
     </div>
   );
 }
