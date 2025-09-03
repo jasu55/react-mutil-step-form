@@ -1,10 +1,18 @@
 import { Input } from "./Input";
 import { motion } from "motion/react";
+import { useState } from "react";
 
-export function FinalForm({ formPage, setFormPage, setForm, form }) {
+export function FinalForm({ setFormPage, setForm, form }) {
+  const [errors, setErrors] = useState({});
+
   const handleContinue = () => {
-    setFormPage("DoneForm");
-    console.log(form);
+    const newErrors = {};
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      setFormPage("DoneForm");
+    }
   };
 
   const handleBack = () => {
@@ -13,8 +21,9 @@ export function FinalForm({ formPage, setFormPage, setForm, form }) {
 
   return (
     <motion.div
-      animate={{ rotate: 360 }}
-      className="p-8 rounded-md w-[480px] h-[655px] bg-[#FFFFFF]"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1, transition: { duration: 1.5 } }}
+      className="p-8 rounded-md w-[480px]  bg-[#FFFFFF]"
     >
       <img
         className="w-[80px]"

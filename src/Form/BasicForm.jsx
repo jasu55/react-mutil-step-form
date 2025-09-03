@@ -1,17 +1,43 @@
 import { Input } from "../Form";
 import { motion } from "motion/react";
-
+import { useState } from "react";
 export function BasicForm({ setFormPage, setForm, form }) {
+  const [errors, setErrors] = useState({});
+
   const handleContinue = () => {
     const newErrors = {};
-    setFormPage("ContactForm");
 
-    console.log(form);
+    const NameRegex = /^[A-Za-z]+$/;
+
+    if (!form.firstname) {
+      newErrors.firstname = "Please enter your first name";
+    } else if (!NameRegex.test(form.firstname)) {
+      newErrors.firstname =
+        "First name cannot contain special characters or numbers.";
+    }
+
+    if (!form.lastname) {
+      newErrors.lastname = "Please enter your last name";
+    } else if (!NameRegex.test(form.lastname)) {
+      newErrors.lastname =
+        "Last name cannot contain special characters or numbers.";
+    }
+
+    if (!form.username) {
+      newErrors.username = "Please enter your username";
+    }
+    setErrors(newErrors);
+
+    // if (Object.keys(newErrors).length === 0) {
+    //   setFormPage("ContactForm");
+    // }
+    setFormPage("ContactForm");
   };
   return (
     <motion.div
-      animate={{ rotate: 360 }}
-      className="p-8 rounded-md w-[480px] h-[655px] bg-[#FFFFFF]"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1, transition: { duration: 1.5 } }}
+      className="p-8 rounded-md w-[480px]  bg-[#FFFFFF]"
     >
       <img
         className="w-[80px] "
@@ -29,7 +55,7 @@ export function BasicForm({ setFormPage, setForm, form }) {
         First name <span className="text-red-500">*</span>
       </h2>
       <Input
-        className="border outline-[#0CA5E9] border-[#CBD5E1] my-[8px] rounded-md text-[16px] h- w-full text-[#8B8E95] p-[12px]"
+        error={errors.firstname}
         placeholder="firstname "
         value={form.firstname}
         onChange={(e) => setForm({ ...form, firstname: e.target.value })}
@@ -39,7 +65,7 @@ export function BasicForm({ setFormPage, setForm, form }) {
         Last name <span className="text-red-500">*</span>
       </h2>
       <Input
-        className="border outline-[#0CA5E9] border-[#CBD5E1] my-[8px] rounded-md text-[16px] h- w-full text-[#8B8E95] p-[12px]"
+        error={errors.lastname}
         placeholder="lastname "
         value={form.lastname}
         onChange={(e) => setForm({ ...form, lastname: e.target.value })}
@@ -49,7 +75,7 @@ export function BasicForm({ setFormPage, setForm, form }) {
         Username <span className="text-red-500">*</span>
       </h2>
       <Input
-        className="border outline-[#0CA5E9] border-[#CBD5E1] my-[8px] rounded-md text-[16px] h- w-full text-[#8B8E95] p-[12px]"
+        error={errors.username}
         placeholder="username "
         value={form.username}
         onChange={(e) => setForm({ ...form, username: e.target.value })}

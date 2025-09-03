@@ -9,26 +9,75 @@ export function ContactForm({ setFormPage, setForm, form }) {
     const newErrors = {};
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(form.email)) {
-      newErrors.email = "Invalid email address";
+    if (!form.email) {
+      newErrors.email = "Please enter email address";
+    } else if (!emailRegex.test(form.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    const mnPhoneRegex = /^\d{8}$/;
+    if (!form.phoneNumber) {
+      newErrors.phoneNumber = "Please enter a phone number";
+    } else if (!mnPhoneRegex.test(form.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid phone number";
+    }
+
+    // const passwordRegex =
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+
+    const lowercaseRegex = /[a-z]/;
+    const uppercaseRegex = /[A-Z]/;
+    const numberRegex = /\d/;
+    const specialCharRegex = /[!@#$%^&*]/;
+    const lengthRegex = /.{8,}/;
+
+    if (!form.password) {
+      newErrors.password = "Please enter password";
+    } else if (!lowercaseRegex.test(form.password)) {
+      newErrors.password =
+        "Password must contain at least one lowercase letter";
+    } else if (!uppercaseRegex.test(form.password)) {
+      newErrors.password =
+        "Password must contain at least one uppercase letter";
+    } else if (!numberRegex.test(form.password)) {
+      newErrors.password = "Password must contain at least one number";
+    } else if (!specialCharRegex.test(form.password)) {
+      newErrors.password =
+        "Password must contain at least one special character";
+    } else if (!lengthRegex.test(form.password)) {
+      newErrors.password = "Password must be at least 8 characters long";
+    }
+
+    if (!form.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (form.confirmPassword !== form.password) {
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      setFormPage("FinalForm");
-    }
-    console.log(form);
+    // if (Object.keys(newErrors).length === 0) {
+    //   setFormPage("FinalForm");
+    // }
+    setFormPage("FinalForm");
   };
 
   const handleBack = () => {
     setFormPage("BasicForm");
   };
 
+  const handlePhoneNumberChange = (e) => {
+    const cleaned = e.target.value.replace(/(^\+)|\D/g, "$1");
+    setForm({ ...form, phoneNumber: cleaned });
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <motion.div
-      animate={{ rotate: 360 }}
-      className="p-8 rounded-md w-[480px] h-[655px] bg-[#FFFFFF]"
+      initial={{ scale: 0 }}
+      animate={{ scale: 1, transition: { duration: 1.5 } }}
+      className="p-8 rounded-md w-[480px]  bg-[#FFFFFF]"
     >
       <img
         className="w-[80px]"
@@ -46,44 +95,53 @@ export function ContactForm({ setFormPage, setForm, form }) {
         Email <span className="text-red-500">*</span>
       </h2>
       <Input
-        className="border outline-[#0CA5E9] border-[#CBD5E1] my-[8px] rounded-md text-[16px] h- w-full text-[#8B8E95] p-[12px]"
-        placeholder="email "
+        placeholder="email"
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
-        errors={{ email: !errors.email }}
+        error={errors.email}
       />
-      {errors.email && <p className="text-red-500">{errors.email}</p>}
 
       <h2 className="font-semibold text-[14px] ">
         Phone number <span className="text-red-500">*</span>
       </h2>
+
       <Input
-        className="border outline-[#0CA5E9] border-[#CBD5E1] my-[8px] rounded-md text-[16px] h- w-full text-[#8B8E95] p-[12px]"
         placeholder="Phone number "
         value={form.phoneNumber}
-        onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
+        onChange={handlePhoneNumberChange}
+        error={errors.phoneNumber}
       />
 
       <h2 className="font-semibold text-[14px] ">
         Password <span className="text-red-500">*</span>
       </h2>
-      <Input
-        type="password"
-        className="border outline-[#0CA5E9] border-[#CBD5E1] my-[8px] rounded-md text-[16px] h- w-full text-[#8B8E95] p-[12px]"
-        placeholder="Password "
-        value={form.password}
-        onChange={(e) => setForm({ ...form, password: e.target.value })}
-      />
+
+      <div className="flex gap-1  justify-between">
+        <Input
+          type={showPassword ? "text" : "password"}
+          placeholder="Password "
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          error={errors.password}
+        />
+        <button
+          onClick={() => setShowPassword(!showPassword)}
+          className="border my-[8px] rounded-md w-12 h-[50px]"
+        >
+          {showPassword ? "Hide" : "Show"}
+        </button>
+      </div>
 
       <h2 className="font-semibold text-[14px] ">
-        Confirm Password <span className="text-red-500">*</span>
+        Confirm Password<span className="text-red-500">*</span>
       </h2>
+
       <Input
-        type="password"
-        className="border outline-[#0CA5E9] border-[#CBD5E1] my-[8px] rounded-md text-[16px] h- w-full text-[#8B8E95] p-[12px]"
+        type={showPassword ? "text" : "password"}
         placeholder="Confirm Password "
         value={form.confirmPassword}
         onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
+        error={errors.confirmPassword}
       />
 
       <div className="flex gap-4">

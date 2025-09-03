@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { BasicForm, ContactForm, FinalForm, DoneForm } from "../Form";
-import { motion } from "motion/react";
 
 export default function Page() {
   const [form, setForm] = useState({

@@ -3,7 +3,8 @@ import { motion } from "motion/react";
 export function DoneForm() {
   return (
     <motion.div
-      animate={{ rotate: 360 }}
+      initial={{ scale: 0 }}
+      animate={{ scale: 1, transition: { duration: 1.5 } }}
       className="p-8 rounded-md w-[480px]  bg-[#FFFFFF]"
     >
       <img
