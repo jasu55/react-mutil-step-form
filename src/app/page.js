@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BasicForm, ContactForm, FinalForm, DoneForm } from "../Form";
 
 export default function Page() {
@@ -15,6 +15,15 @@ export default function Page() {
     profileImage: "",
   });
   const [formPage, setFormPage] = useState("BasicForm");
+
+  useEffect(() => {
+    const localFormData = localStorage.getItem("formData");
+    localFormData ? JSON.parse(localFormData) : null;
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(form));
+  }, [form.email]);
 
   return (
     <div

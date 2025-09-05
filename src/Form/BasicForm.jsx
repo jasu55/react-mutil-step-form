@@ -4,6 +4,10 @@ import { useState } from "react";
 export function BasicForm({ setFormPage, setForm, form }) {
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(form));
+  }, [form.email]);
+
   const handleContinue = () => {
     const newErrors = {};
 
@@ -28,10 +32,11 @@ export function BasicForm({ setFormPage, setForm, form }) {
     }
     setErrors(newErrors);
 
-    // if (Object.keys(newErrors).length === 0) {
-    //   setFormPage("ContactForm");
-    // }
-    setFormPage("ContactForm");
+    if (Object.keys(newErrors).length === 0) {
+      setFormPage("ContactForm");
+      localStorage.setItem("formData", JSON.stringify(form));
+    }
+    // setFormPage("ContactForm");
   };
   return (
     <motion.div

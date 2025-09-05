@@ -4,10 +4,25 @@ import { useState } from "react";
 
 export function FinalForm({ setFormPage, setForm, form }) {
   const [errors, setErrors] = useState({});
+  const [preview, setPreview] = useState();
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const preview = URL.createObjectURL(file);
+    setForm({ ...form, profileImage: preview });
+    setPreview(preview);
+  };
 
   const handleContinue = () => {
     const newErrors = {};
 
+    if (!form.dateOfBirth) {
+      newErrors.dateOfBirth = "Please enter your date of birth";
+    }
+
+    if (!form.profileImage) {
+      newErrors.profileImage = "Please upload a profile image";
+    }
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
@@ -46,19 +61,37 @@ export function FinalForm({ setFormPage, setForm, form }) {
         value={form.dateOfBirth}
         onChange={(e) => setForm({ ...form, dateOfBirth: e.target.value })}
       />
+      {errors.dateOfBirth && (
+        <p className="text-red-500 text-[12px] mt-1">{errors.dateOfBirth}</p>
+      )}
 
       <h2 className="font-semibold text-[14px] ">
         Profile image <span className="text-red-500">*</span>
       </h2>
-      <div className="mt-[8px] w-full h-[180px] bg-[#7F7F800D] flex flex-col items-center justify-center ">
-        <button>
-          <img
-            className="w-[40px] rounded-full"
-            src="https://static.vecteezy.com/system/resources/previews/056/202/171/non_2x/add-image-or-photo-icon-vector.jpg"
-          />
-        </button>
+      <div className="mt-[8px] w-full h-[180px] bg-[#7F7F800D] flex flex-col items-center justify-center relative ">
+        <input
+          className="absolute inset-0 opacity-0 z-2"
+          type="file"
+          onChange={handleImageChange}
+        />
+
+        <img
+          className="w-[40px] rounded-full"
+          src="https://static.vecteezy.com/system/resources/previews/056/202/171/non_2x/add-image-or-photo-icon-vector.jpg"
+        />
+
         <p>Add image</p>
+
+        {preview && (
+          <img
+            src={preview}
+            className="mt-[8px] w-full h-[180px] absolute inset-0 object-cover "
+          />
+        )}
       </div>
+      {errors.profileImage && (
+        <p className="text-red-500 text-[12px] mt-1">{errors.profileImage}</p>
+      )}
 
       <div className="flex gap-4 mt-[50px]">
         <button
