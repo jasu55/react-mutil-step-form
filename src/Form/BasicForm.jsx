@@ -1,12 +1,8 @@
 import { Input } from "../Form";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 export function BasicForm({ setFormPage, setForm, form }) {
   const [errors, setErrors] = useState({});
-
-  useEffect(() => {
-    localStorage.setItem("formData", JSON.stringify(form));
-  }, [form.email]);
 
   const handleContinue = () => {
     const newErrors = {};

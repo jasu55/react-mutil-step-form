@@ -1,19 +1,21 @@
 import { Input } from "./Input";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function ContactForm({ setFormPage, setForm, form }) {
   const [errors, setErrors] = useState({});
+  useEffect(() => {
+    const newErrors = {};
+    setErrors(newErrors);
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(form.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+  }, [form.email]);
 
   const handleContinue = () => {
     const newErrors = {};
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!form.email) {
-      newErrors.email = "Please enter email address";
-    } else if (!emailRegex.test(form.email)) {
-      newErrors.email = "Please enter a valid email address";
-    }
 
     const mnPhoneRegex = /^\d{8}$/;
     if (!form.phoneNumber) {
@@ -56,10 +58,10 @@ export function ContactForm({ setFormPage, setForm, form }) {
 
     setErrors(newErrors);
 
-    // if (Object.keys(newErrors).length === 0) {
-    //   setFormPage("FinalForm");
-    // }
-    setFormPage("FinalForm");
+    if (Object.keys(newErrors).length === 0) {
+      setFormPage("FinalForm");
+    }
+    // setFormPage("FinalForm");
   };
 
   const handleBack = () => {
