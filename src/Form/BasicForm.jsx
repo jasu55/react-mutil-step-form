@@ -4,11 +4,31 @@ import { useState, useEffect } from "react";
 export function BasicForm({ setFormPage, setForm, form }) {
   const [errors, setErrors] = useState({});
 
+  const newErrors = {};
+  const NameRegex = /^[A-Za-z]+$/;
+
+  useEffect(() => {
+    if (!form.firstname) {
+      newErrors.firstname = "Please enter your first name";
+    } else if (!NameRegex.test(form.firstname)) {
+      newErrors.firstname =
+        "First name cannot contain special characters or numbers.";
+    }
+
+    if (!form.lastname) {
+      newErrors.lastname = "Please enter your last name";
+    } else if (!NameRegex.test(form.lastname)) {
+      newErrors.lastname =
+        "Last name cannot contain special characters or numbers.";
+    }
+
+    if (!form.username) {
+      newErrors.username = "Please enter your username";
+    }
+    setErrors(newErrors);
+  }, [form.firstname, form.lastname, form.username]);
+
   const handleContinue = () => {
-    const newErrors = {};
-
-    const NameRegex = /^[A-Za-z]+$/;
-
     if (!form.firstname) {
       newErrors.firstname = "Please enter your first name";
     } else if (!NameRegex.test(form.firstname)) {

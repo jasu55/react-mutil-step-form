@@ -21,9 +21,7 @@ export default function Page() {
     localFormData ? JSON.parse(localFormData) : null;
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("formData", JSON.stringify(form));
-  }, [form.email]);
+
 
   return (
     <div

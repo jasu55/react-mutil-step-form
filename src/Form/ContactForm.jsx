@@ -4,38 +4,65 @@ import { useState, useEffect } from "react";
 
 export function ContactForm({ setFormPage, setForm, form }) {
   const [errors, setErrors] = useState({});
-  useEffect(() => {
-    const newErrors = {};
-    setErrors(newErrors);
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const newErrors = {};
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const mnPhoneRegex = /^\d{8}$/;
+  const lowercaseRegex = /[a-z]/;
+  const uppercaseRegex = /[A-Z]/;
+  const numberRegex = /\d/;
+  const specialCharRegex = /[!@#$%^&*]/;
+  const lengthRegex = /.{8,}/;
+
+  useEffect(() => {
     if (!emailRegex.test(form.email)) {
       newErrors.email = "Please enter a valid email address";
     }
+    setErrors(newErrors);
   }, [form.email]);
 
-  const handleContinue = () => {
-    const newErrors = {};
+  useEffect(() => {
+    if (!mnPhoneRegex.test(form.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid phone number";
+    }
+    setErrors(newErrors);
+  }, [form.phoneNumber]);
 
-    const mnPhoneRegex = /^\d{8}$/;
-    if (!form.phoneNumber) {
-      newErrors.phoneNumber = "Please enter a phone number";
-    } else if (!mnPhoneRegex.test(form.phoneNumber)) {
+  useEffect(() => {
+    if (!lowercaseRegex.test(form.password)) {
+      newErrors.password =
+        "Password must contain at least one lowercase letter";
+    } else if (!uppercaseRegex.test(form.password)) {
+      newErrors.password =
+        "Password must contain at least one uppercase letter";
+    } else if (!numberRegex.test(form.password)) {
+      newErrors.password = "Password must contain at least one number";
+    } else if (!specialCharRegex.test(form.password)) {
+      newErrors.password =
+        "Password must contain at least one special character";
+    } else if (!lengthRegex.test(form.password)) {
+      newErrors.password = "Password must be at least 8 characters long";
+    }
+    setErrors(newErrors);
+  }, [form.password]);
+
+  useEffect(() => {
+    if (form.confirmPassword !== form.password) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    setErrors(newErrors);
+  }, [form.confirmPassword]);
+
+  const handleContinue = () => {
+    if (!emailRegex.test(form.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!mnPhoneRegex.test(form.phoneNumber)) {
       newErrors.phoneNumber = "Please enter a valid phone number";
     }
 
-    // const passwordRegex =
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
-    const lowercaseRegex = /[a-z]/;
-    const uppercaseRegex = /[A-Z]/;
-    const numberRegex = /\d/;
-    const specialCharRegex = /[!@#$%^&*]/;
-    const lengthRegex = /.{8,}/;
-
-    if (!form.password) {
-      newErrors.password = "Please enter password";
-    } else if (!lowercaseRegex.test(form.password)) {
+    if (!lowercaseRegex.test(form.password)) {
       newErrors.password =
         "Password must contain at least one lowercase letter";
     } else if (!uppercaseRegex.test(form.password)) {
@@ -50,9 +77,7 @@ export function ContactForm({ setFormPage, setForm, form }) {
       newErrors.password = "Password must be at least 8 characters long";
     }
 
-    if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
-    } else if (form.confirmPassword !== form.password) {
+    if (form.confirmPassword !== form.password) {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
